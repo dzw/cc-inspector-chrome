@@ -282,6 +282,51 @@ export class Inspector extends InjectEvent {
             everything.open(prefabUUID);
           }
         }
+        break;
+      }
+      case Msg.RequestOpenUuidInCocos: {
+        const uuid: string = pluginEvent.data;
+        everything.open(uuid);
+        break;
+      }
+      case Msg.RequestPrintPaths: {
+        const uuid: string = pluginEvent.data;
+        const node = this.inspectorGameMemoryStorage[uuid];
+        if (node && node.isValid && node instanceof cc.Node) {
+          let path = node.name;
+          let parent = node.parent;
+          while (parent && !(parent instanceof cc.Scene)) {
+            path = parent.name + "/" + path;
+            parent = parent.parent;
+          }
+          console.log(`Node Path: ${path}`);
+        }
+        break;
+      }
+      case Msg.RequestReplaceImage: {
+        const { uuid, url } = pluginEvent.data;
+        const node = this.inspectorGameMemoryStorage[uuid];
+        if (node && node.isValid && node instanceof cc.Node) {
+          const sprite = node.getComponent(cc.Sprite);
+          if (sprite) {
+            if (this.isCreatorV3()) {
+              cc.assetManager.loadRemote(url, (err, texture) => {
+                if (!err && texture) {
+                  const spriteFrame = new cc.SpriteFrame();
+                  spriteFrame.texture = texture;
+                  sprite.spriteFrame = spriteFrame;
+                }
+              });
+            } else {
+              cc.assetManager.loadRemote(url, (err, texture) => {
+                if (!err && texture) {
+                  sprite.spriteFrame = new cc.SpriteFrame(texture);
+                }
+              });
+            }
+          }
+        }
+        break;
       }
     }
   }

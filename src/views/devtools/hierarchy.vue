@@ -514,6 +514,25 @@ export default defineComponent({
             },
           });
           menus.push({
+            name: "print path",
+            icon: "print",
+            callback: (item) => {
+              ga.fireEventWithParam(GA_EventName.MouseMenu, item.name);
+              bridge.send(Msg.RequestPrintPaths, data.id);
+            },
+          });
+          menus.push({
+            name: "replace image",
+            icon: "image",
+            callback: (item) => {
+              ga.fireEventWithParam(GA_EventName.MouseMenu, item.name);
+              const url = window.prompt("please enter image url");
+              if (url) {
+                bridge.send(Msg.RequestReplaceImage, { uuid: data.id, url });
+              }
+            },
+          });
+          menus.push({
             name: "destroy",
             icon: "trash",
             enabled: true,

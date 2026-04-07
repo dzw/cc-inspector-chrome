@@ -23,15 +23,15 @@ import { storeToRefs } from "pinia";
 import { defineComponent, onMounted, onUnmounted, ref, toRaw } from "vue";
 import { GA_EventName } from "../../ga/type";
 import { DocumentEvent } from "../const";
-import {} from "../inject/hint";
+import { } from "../inject/hint";
 import { inspectTarget } from "../inject/inspect-list";
+import { freshEditor } from "../inject/util";
 import Ad from "./ad.vue";
 import Banner from "./banner.vue";
 import Memory from "./memory.vue";
 import Shortkeys from "./shortkeys.vue";
 import { appStore } from "./store";
 import { sendGaEvent } from "./util";
-import { freshEditor } from "../inject/util";
 declare const cc: any;
 const { CCDialog, CCMenu } = ccui.components;
 interface ListItem {
@@ -45,7 +45,7 @@ interface ListItem {
   contextmenu: (event: MouseEvent) => void;
 }
 export default defineComponent({
-  name: "ad",
+  name: "app",
   components: { CCDialog, Banner, Memory, CCMenu },
   setup() {
     function randomSupport(): { icon: string; title: string } {
@@ -243,6 +243,9 @@ export default defineComponent({
     }
 
     function updateAssistantTop(top: number) {
+      if (!rootEl.value) {
+        return;
+      }
       // @ts-ignore
       const root = toRaw(rootEl.value) as HTMLDivElement | null;
       if (!root) {
@@ -284,7 +287,10 @@ export default defineComponent({
       return;
     });
     function onDocEventOnMobile() {
-      const root = toRaw(rootEl.value) as HTMLDivElement;
+      const root = toRaw(rootEl.value) as HTMLDivElement | null;
+      if (!root) {
+        return;
+      }
       root.addEventListener("touchstart", (event: TouchEvent) => {
         // event.preventDefault();
         // event.stopPropagation();
@@ -312,7 +318,10 @@ export default defineComponent({
       });
     }
     function onDocEventOnPc() {
-      const root = toRaw(rootEl.value) as HTMLDivElement;
+      const root = toRaw(rootEl.value) as HTMLDivElement | null;
+      if (!root) {
+        return;
+      }
       root.addEventListener("mousedown", (event: MouseEvent) => {
         // event.preventDefault();
         // event.stopPropagation();

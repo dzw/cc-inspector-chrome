@@ -68,6 +68,9 @@ const options: CocosPluginOptions = {
   minify: false,
   // @ts-ignore
   webpack: {
+    optimization: {
+      minimize: false,
+    },
     devtool: "source-map",
   },
   obscure: false,

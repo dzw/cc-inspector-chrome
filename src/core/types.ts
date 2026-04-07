@@ -170,6 +170,9 @@ export enum Msg {
   RequestBreakClean = "request-break-clean",
   RequestOpenInCocos = "request-open-in-cocos",
   RequestMoveNode = "request-move-node",
+  RequestOpenUuidInCocos = "request-open-uuid-in-cocos",
+  RequestPrintPaths = "request-print-paths",
+  RequestReplaceImage = "request-replace-image",
 }
 export enum BreakOnType {
   SizeChanged = "size changed",
