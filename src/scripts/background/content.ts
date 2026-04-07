@@ -66,6 +66,10 @@ export class Content {
   public onMessage(data: PluginEvent) {
     // content的数据一般都是要同步到devtools
     if (data.isTargetDevtools()) {
+      if (data.msg === Msg.ResponseSyncNode) {
+        // 处理来自 inject 的同步数据，并调用 MCP 接口
+        this.handleSyncToEditor(data.data);
+      }
       if (this.tabInfo.devtool) {
         this.tabInfo.devtool.send(data);
       } else {
@@ -73,6 +77,22 @@ export class Content {
       }
     } else {
       debugger;
+    }
+  }
+
+  private async handleSyncToEditor(syncData: any) {
+    try {
+      console.log("Background processing sync to editor:", syncData);
+      const response = await fetch("http://localhost:3000/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(syncData),
+      });
+      const result = await response.json();
+      this.tabInfo.sendMsgToDevtool(Msg.ResponseSyncNode, result);
+    } catch (err) {
+      console.error("Sync to editor failed:", err);
+      this.tabInfo.sendMsgToDevtool(Msg.ResponseSyncNode, { success: false, error: err.message });
     }
   }
 

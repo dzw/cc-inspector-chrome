@@ -106,6 +106,14 @@ export default defineComponent({
         ccui.footbar.showError(error, { title: "parse property error" });
       }
     });
+    bridge.on(Msg.ResponseSyncNode, (event: PluginEvent) => {
+      const data = event.data;
+      if (data.success) {
+        ccui.footbar.showTips("Sync to editor success!");
+      } else {
+        ccui.footbar.showError(data.error || "Sync failed");
+      }
+    });
     const rotateType = ref<RotateType>(RotateType.None);
     if (config.value.refreshInspector) {
       rotateType.value = RotateType.Loop;

@@ -59,7 +59,7 @@ export class TabInfo {
     });
     this.sendMsgToDevtool(Msg.ResponseUpdateFrames, data as ResponseUpdateFramesData);
   }
-  private sendMsgToDevtool(msg: Msg, data: any) {
+  public sendMsgToDevtool(msg: Msg, data: any) {
     if (this.devtool) {
       const event = new PluginEvent(Page.Background, Page.Devtools, msg, data);
       this.devtool.send(event);

@@ -173,6 +173,8 @@ export enum Msg {
   RequestOpenUuidInCocos = "request-open-uuid-in-cocos",
   RequestPrintPaths = "request-print-paths",
   RequestReplaceImage = "request-replace-image",
+  RequestSyncNode = "request-sync-node",
+  ResponseSyncNode = "response-sync-node",
 }
 export enum BreakOnType {
   SizeChanged = "size changed",

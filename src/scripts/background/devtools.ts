@@ -54,6 +54,10 @@ export class Devtools {
         this.port.disconnect();
         this.tabInfo.devtool = null;
       }
+    } else if (data.msg === Msg.RequestSyncNode) {
+      // 转发同步请求到内容脚本以收集最新数据
+      data.reset(Page.Background, Page.Content);
+      this.tabInfo.sendMsgToContent(data);
     } else {
       // 从devtools过来的消息统一派发到目标content中
       if (data.check(Page.Devtools, Page.Background)) {

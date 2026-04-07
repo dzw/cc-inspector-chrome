@@ -328,6 +328,47 @@ export class Inspector extends InjectEvent {
         }
         break;
       }
+      case Msg.RequestSyncNode: {
+        const uuid: string = pluginEvent.data;
+        const node = this.inspectorGameMemoryStorage[uuid];
+        if (node && node.isValid && node instanceof cc.Node) {
+          const pathArr = [];
+          let parent = node.parent;
+          while (parent && !(parent instanceof cc.Scene)) {
+            pathArr.unshift(parent.name);
+            parent = parent.parent;
+          }
+          const syncData = {
+            uuid: node.uuid,
+            name: node.name,
+            path: pathArr,
+            components: [],
+          };
+          const comps = node._components || [];
+          for (let i = 0; i < comps.length; i++) {
+            const comp = comps[i];
+            const compName = this.getCompName(comp);
+            const props = {};
+            const keys = this._getNodeKeys(comp);
+            for (let j = 0; j < keys.length; j++) {
+              const key = keys[j];
+              try {
+                const val = comp[key];
+                if (typeof val !== "object" || val === null) {
+                  props[key] = val;
+                } else if (val instanceof cc.Vec2 || val instanceof cc.Vec3 || val instanceof cc.Color) {
+                  props[key] = val;
+                }
+              } catch (e) {}
+            }
+            syncData.components.push({ name: compName, props });
+          }
+          console.log(`[SyncRequestData]:${JSON.stringify(syncData)}`);
+           this.sendMsgToContent(Msg.ResponseSyncNode, syncData);
+           ccui.footbar.showTips("Sync data sent to devtools.");
+         }
+        break;
+      }
     }
   }
   private getNodePrefabUUID(node: any) {

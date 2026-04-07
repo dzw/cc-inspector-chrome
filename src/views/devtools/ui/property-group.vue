@@ -8,6 +8,7 @@
       </template>
       <template v-slot:header>
         <div style="flex: 1"></div>
+        <i v-if="group.name === 'cc.Node'" @click.stop="onSync" class="print iconfont icon_refresh" title="同步到编辑器场景"></i>
         <i v-if="!['cc.Node', 'cc.Scene'].find((el) => el === group.name)" @click.stop="onOpenCode" class="print iconfont icon_ts_text" title="在Source面板中打开对应的源代码"></i>
         <i style="" @click.stop="onLog" class="print iconfont icon_print" title="值会临时保存到window.temp"></i>
       </template>
@@ -75,6 +76,11 @@ export default defineComponent({
     return {
       fold,
       visible,
+      onSync() {
+        ga.fireEventWithParam(GA_EventName.Inspector, "group-sync");
+        const raw = toRaw(props.group);
+        bridge.send(Msg.RequestSyncNode, raw.id);
+      },
       onChangeVisible(b: boolean) {
         ga.fireEventWithParam(GA_EventName.Inspector, "group-visible");
         const raw: BoolData = toRaw<Info>(visibleTarget.value) as BoolData;
