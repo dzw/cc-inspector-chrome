@@ -82,6 +82,16 @@ export type RequestOpenScriptData = {
 };
 export type ResponseErrorData = string;
 export type RequestBreakOnData = { uuid: string; type: BreakOnType };
+export type RequestMoveNodeData = {
+  /**
+   * 被拖动的节点UUID
+   */
+  uuid: string;
+  /**
+   * 目标父节点的UUID
+   */
+  targetUUID: string;
+};
 export enum Msg {
   None = "None",
   /**
@@ -159,6 +169,7 @@ export enum Msg {
   RequestBreakOn = "request-break-on",
   RequestBreakClean = "request-break-clean",
   RequestOpenInCocos = "request-open-in-cocos",
+  RequestMoveNode = "request-move-node",
 }
 export enum BreakOnType {
   SizeChanged = "size changed",

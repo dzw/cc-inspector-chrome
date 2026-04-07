@@ -43,6 +43,7 @@ const manifest: CocosPluginManifest = {
     // googleAnalytics: "G-0S2X4Z1FE7",
   },
   chrome: {
+    // @ts-ignore - permissions not yet in type definition
     permissions: ["storage", "notifications"],
     url: "https://chromewebstore.google.com/detail/cc-inspector/hejbkamkfnkifppoaljcidepkhgaahcj?authuser=0&hl=en",
     version: 3,

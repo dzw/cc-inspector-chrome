@@ -13,7 +13,7 @@
   },
   "name": "cc-plugin-demo",
   "scripts": {
-    "installForce": "yarn install --force",
+    "installForce": "npm install --force",
     "ccp-pack-v2": "cc-plugin pack cp-v2",
     "ccp-pack-v3": "cc-plugin pack cp-v3",
     "ccp-pack-web": "cc-plugin pack web",
@@ -29,6 +29,7 @@
     "@tsparticles/vue3": "^3.0.1",
     "lodash": "^4.17.21",
     "tiny-emitter": "2.1.0",
+    "pinia": "^2.1.7",
     "uuid": "^8.3.2"
   }
 }

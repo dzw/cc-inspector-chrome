@@ -1,5 +1,4 @@
 .idea
-test/
 node_modules/
 web/
 .yalc/
@@ -9,3 +8,4 @@ dist/
 yarn-error.log
 chrome.zip
 chrome.crx
+/package-lock.json

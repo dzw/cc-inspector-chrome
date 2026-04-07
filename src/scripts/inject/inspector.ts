@@ -1,6 +1,6 @@
 // eval 注入脚本的代码,变量尽量使用var,后来发现在import之后,let会自动变为var
 import { uniq } from "lodash";
-import { BreakOnType, Msg, PluginEvent, RequestBreakOnData, RequestLogData, RequestNodeInfoData, RequestOpenNodeTouchFuntionData, RequestOpenScriptData, RequestSetPropertyData, ResponseGameInfoData, ResponseNodeInfoData, ResponseSetPropertyData, ResponseSupportData, ResponseTreeInfoData } from "../../core/types";
+import { BreakOnType, Msg, PluginEvent, RequestBreakOnData, RequestLogData, RequestMoveNodeData, RequestNodeInfoData, RequestOpenNodeTouchFuntionData, RequestOpenScriptData, RequestSetPropertyData, ResponseGameInfoData, ResponseNodeInfoData, ResponseSetPropertyData, ResponseSupportData, ResponseTreeInfoData } from "../../core/types";
 import { CompType, getNodeIcon } from "../../views/devtools/comp";
 import { ArrayData, BoolData, ColorData, DataType, EngineData, EnumData, Group, ImageData, Info, InvalidData, NodeInfoData, NumberData, ObjectCircleData, ObjectData, Property, StringData, TreeData, Vec2Data, Vec3Data, Vec4Data } from "../../views/devtools/data";
 import { addBreak, cleanBreak } from "./break";
@@ -105,6 +105,18 @@ export class Inspector extends InjectEvent {
           this.sendMsgToContent(Msg.ResponseSetProperty, data as ResponseSetPropertyData);
         } else {
           console.warn(`设置失败：${data.path}`);
+        }
+        break;
+      }
+      case Msg.RequestMoveNode: {
+        const data: RequestMoveNodeData = pluginEvent.data;
+        const node = this.inspectorGameMemoryStorage[data.uuid];
+        const targetNode = this.inspectorGameMemoryStorage[data.targetUUID];
+        if (node && targetNode && node.isValid && targetNode.isValid) {
+          if (node instanceof cc.Node && targetNode instanceof cc.Node) {
+            targetNode.addChild(node);
+            this.updateTreeInfo();
+          }
         }
         break;
       }

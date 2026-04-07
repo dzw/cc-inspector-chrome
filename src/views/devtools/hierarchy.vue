@@ -11,7 +11,18 @@
           <i class="matchCase iconfont icon_font_size" @click.stop="onChangeCase" title="match case" :style="{ color: matchCase ? 'red' : '' }"></i>
         </slot>
       </CCInput>
-      <CCTree :show-icon="config.showTreeIcon" @do-search="doSearch" :search="true" @node-menu="onMenu" @click-subfix="onClickSubfix" @contextmenu.prevent.stop="onMenu" style="flex: 1" ref="elTree" :expand-keys="expandedKeys" :default-expand-all="false" :value="treeData" @node-expand="onNodeExpand" @node-collapse="onNodeCollapse" @node-click="handleNodeClick" @node-unclick="handleNodeUnclick" @node-enter="handleNodeEnter" @node-leave="handleNodeLeave"></CCTree>
+      <CCTree :show-icon="config.showTreeIcon"
+       @do-search="doSearch" :search="true"
+       @node-menu="onMenu"
+       @click-subfix="onClickSubfix"
+       @contextmenu.prevent.stop="onMenu" style="flex: 1" ref="elTree" :expand-keys="expandedKeys" :default-expand-all="false" :value="treeData"
+       @node-expand="onNodeExpand"
+       @node-collapse="onNodeCollapse"
+       @node-click="handleNodeClick"
+       @node-unclick="handleNodeUnclick"
+       @node-enter="handleNodeEnter"
+       @node-leave="handleNodeLeave" :draggable="true"
+       @node-drop="handleNodeDrop"></CCTree>
     </CCDock>
   </div>
 </template>
@@ -221,6 +232,14 @@ export default defineComponent({
       frameID,
       handleNodeUnclick() {
         updateSelect(null);
+      },
+      handleNodeDrop(dragNode: TreeData, targetNode: TreeData) {
+        if (dragNode && targetNode && dragNode.id !== targetNode.id) {
+          bridge.send(Msg.RequestMoveNode, {
+            uuid: dragNode.id,
+            targetUUID: targetNode.id,
+          } as RequestMoveNodeData);
+        }
       },
       handleNodeEnter(data: TreeData | null) {
         if (!config.value.hoverInspect) {
