@@ -11,18 +11,7 @@
           <i class="matchCase iconfont icon_font_size" @click.stop="onChangeCase" title="match case" :style="{ color: matchCase ? 'red' : '' }"></i>
         </slot>
       </CCInput>
-      <CCTree :show-icon="config.showTreeIcon"
-       @do-search="doSearch" :search="true"
-       @node-menu="onMenu"
-       @click-subfix="onClickSubfix"
-       @contextmenu.prevent.stop="onMenu" style="flex: 1" ref="elTree" :expand-keys="expandedKeys" :default-expand-all="false" :value="treeData"
-       @node-expand="onNodeExpand"
-       @node-collapse="onNodeCollapse"
-       @node-click="handleNodeClick"
-       @node-unclick="handleNodeUnclick"
-       @node-enter="handleNodeEnter"
-       @node-leave="handleNodeLeave" :draggable="true"
-       @node-drop="handleNodeDrop"></CCTree>
+      <CCTree :show-icon="config.showTreeIcon" @do-search="doSearch" :search="true" @node-menu="onMenu" @click-subfix="onClickSubfix" @contextmenu.prevent.stop="onMenu" style="flex: 1" ref="elTree" :expand-keys="expandedKeys" :default-expand-all="false" :value="treeData" @node-expand="onNodeExpand" @node-collapse="onNodeCollapse" @node-click="handleNodeClick" @node-unclick="handleNodeUnclick" @node-enter="handleNodeEnter" @node-leave="handleNodeLeave"></CCTree>
     </CCDock>
   </div>
 </template>
@@ -33,7 +22,7 @@ import { HandExpandOptions } from "@xuyanfeng/cc-ui/types/cc-tree/const";
 import Mousetrap, { MousetrapInstance } from "mousetrap";
 import { storeToRefs } from "pinia";
 import { defineComponent, nextTick, onMounted, onUnmounted, ref, toRaw, watch } from "vue";
-import { BreakOnType, Msg, PluginEvent, RequestBreakOnData, RequestOpenNodeTouchFuntionData, RequestOpenScriptData, RequestTreeInfoData, RequestUseFrameData, ResponseSetPropertyData, ResponseSupportData } from "../../core/types";
+import { BreakOnType, Msg, PluginEvent, RequestBreakOnData, RequestMoveNodeData, RequestOpenNodeTouchFuntionData, RequestOpenScriptData, RequestTreeInfoData, RequestUseFrameData, ResponseSetPropertyData, ResponseSupportData } from "../../core/types";
 import { ga } from "../../ga";
 import { GA_EventName } from "../../ga/type";
 import { ShowCode } from "../../scripts/inject/types";
@@ -109,6 +98,31 @@ export default defineComponent({
         const el = toRaw(elTree.value);
         ins = new Mousetrap(el.treeElement);
         ins.bind(["space"], onQuickVisible, "keydown");
+        ins.bind(
+          ["mod+x"],
+          (event: KeyboardEvent) => {
+            if (selectedUUID) {
+              ga.fireEventWithParam(GA_EventName.Hierarchy, "shortcut cut");
+              cutNodeId.value = selectedUUID;
+              ccui.footbar.showTips("node cutted, select target to paste");
+            }
+          },
+          "keydown"
+        );
+        ins.bind(
+          ["mod+v"],
+          (event: KeyboardEvent) => {
+            if (selectedUUID && cutNodeId.value && cutNodeId.value !== selectedUUID) {
+              ga.fireEventWithParam(GA_EventName.Hierarchy, "shortcut paste");
+              bridge.send(Msg.RequestMoveNode, {
+                uuid: cutNodeId.value,
+                targetUUID: selectedUUID,
+              } as RequestMoveNodeData);
+              cutNodeId.value = null;
+            }
+          },
+          "keydown"
+        );
       }
       Bus.on(BusMsg.ChangeContent, changeContent);
       Bus.on(BusMsg.ShowPlace, funcShowPlace);
@@ -207,6 +221,7 @@ export default defineComponent({
       }
     }
     const rotateType = ref<RotateType>(RotateType.None);
+    const cutNodeId = ref<string | null>(null);
     if (config.value.refreshHirarchy) {
       rotateType.value = RotateType.Loop;
     }
@@ -232,14 +247,6 @@ export default defineComponent({
       frameID,
       handleNodeUnclick() {
         updateSelect(null);
-      },
-      handleNodeDrop(dragNode: TreeData, targetNode: TreeData) {
-        if (dragNode && targetNode && dragNode.id !== targetNode.id) {
-          bridge.send(Msg.RequestMoveNode, {
-            uuid: dragNode.id,
-            targetUUID: targetNode.id,
-          } as RequestMoveNodeData);
-        }
       },
       handleNodeEnter(data: TreeData | null) {
         if (!config.value.hoverInspect) {
@@ -532,6 +539,32 @@ export default defineComponent({
               }
             },
           });
+          menus.push({ type: ccui.menu.MenuType.Separator });
+          menus.push({
+            name: "cut",
+            icon: "cut",
+            callback: (item) => {
+              ga.fireEventWithParam(GA_EventName.MouseMenu, item.name);
+              cutNodeId.value = data.id;
+              ccui.footbar.showTips("node cutted, select target to paste");
+            },
+          });
+          menus.push({
+            name: "paste as child",
+            icon: "paste",
+            enabled: !!cutNodeId.value && cutNodeId.value !== data.id,
+            callback: (item) => {
+              ga.fireEventWithParam(GA_EventName.MouseMenu, item.name);
+              if (cutNodeId.value) {
+                bridge.send(Msg.RequestMoveNode, {
+                  uuid: cutNodeId.value,
+                  targetUUID: data.id,
+                } as RequestMoveNodeData);
+                cutNodeId.value = null;
+              }
+            },
+          });
+          menus.push({ type: ccui.menu.MenuType.Separator });
           menus.push({
             name: "destroy",
             icon: "trash",
