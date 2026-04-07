@@ -26,8 +26,12 @@ export const appStore = defineStore("app", () => {
   return {
     config,
     init() {
-      profile.Adaptation.init(pluginConfig);
-      profile.init(new ConfigData(), pluginConfig);
+      if (profile.Adaptation) {
+        profile.Adaptation.init(pluginConfig);
+      }
+      if (profile.init) {
+        profile.init(new ConfigData(), pluginConfig);
+      }
       const data = profile.load(`${pluginConfig.manifest.name}-assistant.json`) as ConfigData;
       config.value.autoHide = data.autoHide;
       config.value.pos = data.pos;
