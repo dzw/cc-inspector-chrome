@@ -55,9 +55,21 @@ const manifest: CocosPluginManifest = {
     script_content: "src/scripts/content/index.ts",
     script_inject: "src/scripts/inject/index.ts",
     script_inject_view: "src/scripts/inject-view/web-test.ts",
+    sourceMap: true,
   },
 };
 const options: CocosPluginOptions = {
+  // @ts-ignore
+  genSourceMap: true,
+  // @ts-ignore
+  production: false,
+  // @ts-ignore
+  sourceMap: true,
+  minify: false,
+  // @ts-ignore
+  webpack: {
+    devtool: "source-map",
+  },
   obscure: false,
   server: {
     enabled: false,

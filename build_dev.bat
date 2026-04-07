@@ -1,0 +1,1 @@
+npx cc-plugin pack chrome --dev
