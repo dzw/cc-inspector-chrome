@@ -318,7 +318,7 @@ export function getNodeIcon(comp: CompType): string {
   map[CompType.AudioSource] = "icon_audio";
   let ret = map[comp];
   if (!ret) {
-    debugger;
+    //debugger;
     console.log(`get node icon fail: ${comp}, please check.`);
     ret = map[CompType.Node];
   }
