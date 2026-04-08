@@ -1447,10 +1447,10 @@
   resolved "http://mirrors.cloud.tencent.com/npm/@xtuc/long/-/long-4.2.2.tgz"
   integrity sha512-NuHqBY1PB/D8xU6s/thBgOAiAP7HOYDQ32+BFZILJ8ivkUkAHQnWfn6WhL79Owj1qmUnoN/YPhktdIoucipkAQ==
 
-"@xuyanfeng/cc-ui@0.2.37":
-  version "0.2.37"
-  resolved "https://registry.npmmirror.com/@xuyanfeng/cc-ui/-/cc-ui-0.2.37.tgz"
-  integrity sha512-a4U5W0NAV3NgtuGijVCbnNCMY3Xn1mQWJ2WS9AFDkBPbBpiTea/WTme8Cg6qX4yNg2HJiri1NmBB3YQTZIhKeQ==
+"@xuyanfeng/cc-ui@0.2.41":
+  version "0.2.41"
+  resolved "https://registry.npmmirror.com/@xuyanfeng/cc-ui/-/cc-ui-0.2.41.tgz"
+  integrity sha512-fhPe0HKQkrEt4GgmKO++NSgEOFToC8Yb+mhk5/uwFL5iFmisjvONblJES538MBBB7UmAE+ymv+uWI7xjsURQbQ==
   dependencies:
     axios "^1.7.2"
     chalk "^5.3.0"
@@ -4890,9 +4890,14 @@ lodash.uniq@^4.5.0:
   resolved "http://mirrors.cloud.tencent.com/npm/lodash.uniq/-/lodash.uniq-4.5.0.tgz"
   integrity sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==
 
-lodash@^4.17.14, lodash@^4.17.20, lodash@^4.17.21, lodash@4.17.21:
+lodash@^4.17.14, lodash@^4.17.20, lodash@^4.17.21, lodash@^4.17.22:
+  version "4.18.1"
+  resolved "https://registry.npmmirror.com/lodash/-/lodash-4.18.1.tgz"
+  integrity sha512-dMInicTPVE8d1e5otfwmmjlxkZoUpiVLwyeTdUsi/Caj/gfzzblBcCE5sRHV/AsjuCmxWrte2TNGSYuCeCq+0Q==
+
+lodash@4.17.21:
   version "4.17.21"
-  resolved "http://mirrors.cloud.tencent.com/npm/lodash/-/lodash-4.17.21.tgz"
+  resolved "https://registry.npmmirror.com/lodash/-/lodash-4.17.21.tgz"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
 log-symbols@^4.1.0:

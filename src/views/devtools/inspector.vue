@@ -5,6 +5,9 @@
         <Refresh :type="rotateType" @click="onClickRefresh"></Refresh>
       </template>
       <div class="inspector" @contextmenu.prevent.stop="onMenu">
+        <div v-if="treeItemData" class="sync-bar">
+          <i @click.stop="onSync" class="iconfont icon_refresh" title="同步到编辑器场景"></i>
+        </div>
         <Properties v-if="treeItemData" :data="treeItemData"></Properties>
       </div>
     </CCDock>
@@ -124,6 +127,11 @@ export default defineComponent({
       onClickRefresh() {
         updateNodeInfo();
       },
+      onSync() {
+        if (selectedUUID) {
+          bridge.send(Msg.RequestSyncNode, selectedUUID);
+        }
+      },
       onMenu(evnet: MouseEvent) {
         const menus: IUiMenuItem[] = [];
         menus.push({
@@ -178,6 +186,27 @@ export default defineComponent({
     flex: 1;
     flex-direction: column;
     overflow: hidden;
+
+    .sync-bar {
+      padding: 5px 10px;
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: 1px solid #444;
+
+      i {
+        cursor: pointer;
+        font-size: 14px;
+        color: #aaa;
+
+        &:hover {
+          color: #fff;
+        }
+
+        &:active {
+          color: #ffaa00;
+        }
+      }
+    }
   }
 }
 </style>

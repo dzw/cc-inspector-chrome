@@ -28,7 +28,7 @@
   "dependencies": {
     "@tsparticles/slim": "^3.8.1",
     "@tsparticles/vue3": "^3.0.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.22",
     "pinia": "^2.1.7",
     "tiny-emitter": "2.1.0",
     "uuid": "^8.3.2",
