@@ -43,8 +43,9 @@ const manifest: CocosPluginManifest = {
     // googleAnalytics: "G-0S2X4Z1FE7",
   },
   chrome: {
-    // @ts-ignore - permissions not yet in type definition
-    permissions: ["storage", "notifications"],
+    permissions: ["storage", 
+        "notifications",
+        "debugger"],
     url: "https://chromewebstore.google.com/detail/cc-inspector/hejbkamkfnkifppoaljcidepkhgaahcj?authuser=0&hl=en",
     version: 3,
     pem: "./crx-key.pem",
@@ -54,8 +55,7 @@ const manifest: CocosPluginManifest = {
     script_background: "src/scripts/background/index.ts",
     script_content: "src/scripts/content/index.ts",
     script_inject: "src/scripts/inject/index.ts",
-    script_inject_view: "src/scripts/inject-view/web-test.ts",
-    sourceMap: true,
+    script_inject_view: "src/scripts/inject-view/web-test.ts"
   },
 };
 const options: CocosPluginOptions = {
