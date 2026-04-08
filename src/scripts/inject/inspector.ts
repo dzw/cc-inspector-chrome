@@ -338,10 +338,38 @@ export class Inspector extends InjectEvent {
             pathArr.unshift(parent.name);
             parent = parent.parent;
           }
+          // 收集节点 transform 数据（MCP 标准格式）
+          const transform: any = {};
+          try {
+            // @ts-ignore
+            if (node.position) transform.position = { x: node.position.x, y: node.position.y, z: node.position.z };
+          } catch (_) {}
+          try {
+            // @ts-ignore
+            if (node.rotation) transform.rotation = { x: 0, y: 0, z: node.rotation }; // 2D rotation only z
+          } catch (_) {}
+          try {
+            // @ts-ignore
+            if (node.scale) transform.scale = { x: node.scale.x, y: node.scale.y, z: node.scale.z };
+          } catch (_) {}
+          
+          // 其他节点属性（active/layer等）
+          const nodeProps: any = {};
+          try {
+            // @ts-ignore
+            if (node.active !== undefined) nodeProps.active = node.active;
+          } catch (_) {}
+          try {
+            // @ts-ignore
+            if (node.layer !== undefined) nodeProps.layer = node.layer;
+          } catch (_) {}
+          
           const syncData = {
             uuid: node.uuid,
             name: node.name,
             path: pathArr,
+            transform,
+            nodeProps,
             components: [],
           };
           const comps = node._components || [];
@@ -388,7 +416,7 @@ export class Inspector extends InjectEvent {
           }
           console.log(`[SyncRequestData]:${JSON.stringify(syncData)}`);
            this.sendMsgToContent(Msg.ResponseSyncNode, syncData);
-           ccui.footbar.showTips("Sync data sent to devtools.");
+          console.log("Sync data sent to devtools.");
          }
         break;
       }
