@@ -354,10 +354,33 @@ export class Inspector extends InjectEvent {
               const key = keys[j];
               try {
                 const val = comp[key];
-                if (typeof val !== "object" || val === null) {
-                  props[key] = val;
-                } else if (val instanceof cc.Vec2 || val instanceof cc.Vec3 || val instanceof cc.Color) {
-                  props[key] = val;
+                const toPlain = (v: any) => {
+                  if (v === null || v === undefined) return v;
+                  if (typeof v !== "object") return v;
+                  try {
+                    // @ts-ignore
+                    if (v instanceof cc.Vec2) {
+                      return { x: v.x, y: v.y };
+                    }
+                    // @ts-ignore
+                    if (v instanceof cc.Vec3) {
+                      return { x: v.x, y: v.y, z: v.z };
+                    }
+                    // @ts-ignore
+                    if (v instanceof cc.Color) {
+                      return { r: v.r, g: v.g, b: v.b, a: v.a };
+                    }
+                    // @ts-ignore
+                    if (typeof cc.Size !== "undefined" && v instanceof cc.Size) {
+                      return { width: v.width, height: v.height };
+                    }
+                  } catch (e) {}
+                  return undefined;
+                };
+                const plain = toPlain(val);
+                if (plain !== undefined) {
+                  // @ts-ignore
+                  props[key] = plain;
                 }
               } catch (e) {}
             }

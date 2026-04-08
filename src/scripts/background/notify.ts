@@ -179,29 +179,35 @@ export const TipUpdate = "tip-update";
   } catch (e) {
     console.error(e);
   }
-  chrome.notifications.onClicked.addListener((id) => {
-    const ret = config.find((el) => el.id === id);
-    if (ret) {
-      ret.click && ret.click();
-    }
-  });
-  chrome.notifications.onClosed.addListener((id) => {
-    const ret = config.find((el) => el.id === id);
-    if (ret) {
-      ret.closed && ret.closed();
-    }
-  });
-  chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
-    const ret = config.find((el) => el.id === notificationId);
-    if (!ret.buttons) {
-      return;
-    }
-    const btn = ret.buttons[buttonIndex];
-    if (!btn) {
-      return;
-    }
-    btn.click && btn.click();
-  });
+  if (chrome?.notifications?.onClicked) {
+    chrome.notifications.onClicked.addListener((id) => {
+      const ret = config.find((el) => el.id === id);
+      if (ret) {
+        ret.click && ret.click();
+      }
+    });
+  }
+  if (chrome?.notifications?.onClosed) {
+    chrome.notifications.onClosed.addListener((id) => {
+      const ret = config.find((el) => el.id === id);
+      if (ret) {
+        ret.closed && ret.closed();
+      }
+    });
+  }
+  if (chrome?.notifications?.onButtonClicked) {
+    chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
+      const ret = config.find((el) => el.id === notificationId);
+      if (!ret?.buttons) {
+        return;
+      }
+      const btn = ret.buttons[buttonIndex];
+      if (!btn) {
+        return;
+      }
+      btn.click && btn.click();
+    });
+  }
 
   for (let i = 0; i < config.length; i++) {
     await createNotification(config[i]);
@@ -213,16 +219,23 @@ export const TipUpdate = "tip-update";
       return;
     }
     const { title, buttons, message, id } = config;
-    chrome.notifications.create(
-      id,
-      {
-        type: "basic",
-        iconUrl: "icons/48.png",
-        title: title,
-        message: message,
-        buttons: buttons ? buttons.map((el) => ({ title: el.title })) : [],
-      },
-      (id: string) => {}
-    );
+    if (chrome?.notifications?.create) {
+      chrome.notifications.create(
+        id,
+        {
+          type: "basic",
+          iconUrl: "icons/48.png",
+          title: title,
+          message: message,
+          buttons: buttons ? buttons.map((el) => ({ title: el.title })) : [],
+        },
+        (id: string) => {}
+      );
+    } else {
+      // 无通知权限或不可用，降级为打开 tab
+      if (config.click) {
+        config.click();
+      }
+    }
   }
 })();
