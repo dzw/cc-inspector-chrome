@@ -179,39 +179,42 @@ export const TipUpdate = "tip-update";
   } catch (e) {
     console.error(e);
   }
-  if (chrome?.notifications?.onClicked) {
-    chrome.notifications.onClicked.addListener((id) => {
-      const ret = config.find((el) => el.id === id);
-      if (ret) {
-        ret.click && ret.click();
-      }
-    });
-  }
-  if (chrome?.notifications?.onClosed) {
-    chrome.notifications.onClosed.addListener((id) => {
-      const ret = config.find((el) => el.id === id);
-      if (ret) {
-        ret.closed && ret.closed();
-      }
-    });
-  }
-  if (chrome?.notifications?.onButtonClicked) {
-    chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
-      const ret = config.find((el) => el.id === notificationId);
-      if (!ret?.buttons) {
-        return;
-      }
-      const btn = ret.buttons[buttonIndex];
-      if (!btn) {
-        return;
-      }
-      btn.click && btn.click();
-    });
-  }
+  /*
+    if (chrome?.notifications?.onClicked) {
+      chrome.notifications.onClicked.addListener((id) => {
+        const ret = config.find((el) => el.id === id);
+        if (ret) {
+          ret.click && ret.click();
+        }
+      });
+    }
+    if (chrome?.notifications?.onClosed) {
+      chrome.notifications.onClosed.addListener((id) => {
+        const ret = config.find((el) => el.id === id);
+        if (ret) {
+          ret.closed && ret.closed();
+        }
+      });
+    }
+    if (chrome?.notifications?.onButtonClicked) {
+      chrome.notifications.onButtonClicked.addListener((notificationId, buttonIndex) => {
+        const ret = config.find((el) => el.id === notificationId);
+        if (!ret?.buttons) {
+          return;
+        }
+        const btn = ret.buttons[buttonIndex];
+        if (!btn) {
+          return;
+        }
+        btn.click && btn.click();
+      });
+    }
 
-  for (let i = 0; i < config.length; i++) {
-    await createNotification(config[i]);
-  }
+
+    for (let i = 0; i < config.length; i++) {
+      await createNotification(config[i]);
+    }
+  */
 
   async function createNotification(config: ConfigItem) {
     const b = await config.check(config);

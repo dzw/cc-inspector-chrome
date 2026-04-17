@@ -44,7 +44,7 @@ const manifest: CocosPluginManifest = {
   },
   chrome: {
     permissions: ["storage", 
-        "notifications",
+        //"notifications",
         "debugger"],
     url: "https://chromewebstore.google.com/detail/cc-inspector/hejbkamkfnkifppoaljcidepkhgaahcj?authuser=0&hl=en",
     version: 3,
